@@ -19,3 +19,15 @@ class UserRegistrationForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'phone_number')
+
+    def clean_password2(self):
+        cd = self.cleaned_data
+        if cd['password'] != cd['password2']:
+            raise forms.ValidationError('passwords do not match')
+        return cd['password2']
+
+    def clean_phone_number(self):
+        phone = self.cleaned_data['phone_number']
+        if User.objects.filter(phone_number=phone).exists():
+            raise forms.ValidationError('this phone number already exists')
+        return phone
