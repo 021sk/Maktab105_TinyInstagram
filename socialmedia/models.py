@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     date_of_birth = models.DateField(blank=True, null=True)
     bio = models.TextField(null=True, blank=True)
-    photo = models.ImageField(upload_to='', null=True, blank=True)
+    photo = models.ImageField(upload_to='account_images/', null=True, blank=True)
     job = models.CharField(max_length=250, null=True, blank=True)
     phone_number = models.CharField(max_length=11, null=True, blank=True)
     following = models.ManyToManyField('self', symmetrical=False, related_name='followers')
@@ -30,10 +30,8 @@ class Image(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    name = models.CharField(max_length=250, null=True, blank=True,)
+    name = models.CharField(max_length=250, null=True, blank=True, )
     body = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
-
-
