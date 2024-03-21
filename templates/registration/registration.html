@@ -1,23 +1,106 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    {% include "layout/head.html" %}#}
+{#</head>#}
+{#<body>#}
+{#<section class="login">#}
+{#    <div class="container">#}
+{#        <div class="banner-content">#}
+{#            <form method="post" class="form-signin">#}
+{#                <div class="form-group">#}
+{#                    {% csrf_token %}#}
+{#                    {{ form.as_p }}#}
+{#                </div>#}
+{#                <button class="kafe-btn kafe-btn-mint btn-block">ثبت نام</button>#}
+{#                <br/>#}
+{#            </form>#}
+{##}
+{#        </div><!--/. banner-content -->#}
+{#    </div><!-- /.container -->#}
+{##}
+{#</body>#}
+{#</html>#}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    {% include "layout/head.html" %}
-</head>
-<body>
-     <section class="login">
-  <div class="container">
-   <div class="banner-content">
-      <form method="post" class="form-signin">
-           <div class="form-group">
-            {% csrf_token %}
-            {{ form.as_p }}
-           </div>
-           <button class="kafe-btn kafe-btn-mint btn-block">ثبت نام</button>
-           <br/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  </head>
+  <body class="bg-gray-200 flex justify-center items-center h-screen">
+    <div class="bg-white p-10 rounded-lg shadow-md ">
+      {% if form.errors %}
+       <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <span class="block sm:inline">There was an error with your form ...</span>
+          <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+              <button class="btn-close fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/>
+              </button>
+          </span>
+       </div>
+      {% endif %}
+      <h1 class="text-xl font-bold mb-4">User Registration</h1>
+      <form action="" method="POST">
+      {% csrf_token %}
+          {% for field in form %}
+    <div class="fieldWrapper">
+        {{ field.errors }}
+        <label for="{{ field.auto_id }}" class="block text-sm font-medium text-gray-700">{{ field.label }}</label> {{ field }}
+        {% if field.help_text %}
+          <p class="help" id="{{ field.auto_id }}_helptext">
+            {{ field.help_text|safe }}
+          </p>
+        {% endif %}
+    </div>
+{% endfor %}
+        
+{#        {% csrf_token %}#}
+{#        {{form.as_p}}#}
+<!--        <div class="mb-8">-->
+<!--          <label for="username" class="block text-sm font-medium text-gray-700">Username</label>-->
+<!--          <input-->
+<!--            type="text"-->
+<!--            id="username"-->
+<!--            name="username"-->
+<!--            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"-->
+<!--          />-->
+<!--        </div>-->
+<!--        <div class="mb-4">-->
+<!--          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>-->
+<!--          <input-->
+<!--            type="email"-->
+<!--            id="email"-->
+<!--            name="email"-->
+<!--            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"-->
+<!--          />-->
+<!--        </div>-->
+<!--        <div class="mb-4">-->
+<!--          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>-->
+<!--          <input-->
+<!--            type="password"-->
+<!--            id="password"-->
+<!--            name="password"-->
+<!--            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"-->
+<!--          />-->
+<!--        </div>-->
+          <br>
+{#        <button#}
+{#          type="submit"#}
+{#          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">#}
+{#          Register#}
+{#        </button>#}
+         <button
+                      class="mb-3 inline-block w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-dark-3 transition duration-150 ease-in-out hover:shadow-dark-2 focus:shadow-dark-2 focus:outline-none focus:ring-0 active:shadow-dark-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
+                      type="submit"
+                      data-twe-ripple-init
+                      data-twe-ripple-color="light"
+                      style="
+                        background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+                      ">
+                      register
+                    </button>
       </form>
-
-   </div><!--/. banner-content -->
-  </div><!-- /.container -->
-
-</body>
+    </div>
+  </body>
 </html>

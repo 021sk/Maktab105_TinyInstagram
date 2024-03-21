@@ -1,11 +1,14 @@
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth.views import LoginView as _LoginView
+from django.forms import Form
 from .forms import LoginForm, UserRegistrationForm
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, CreateView
+from django.contrib.messages.views import SuccessMessageMixin
 
 
 def log_out(request):
@@ -30,15 +33,17 @@ def index(request):
     return HttpResponse("you are login")
 
 
-class RegistrationView(FormView):
+class RegistrationView(CreateView, SuccessMessageMixin):
     template_name = "registration/registration.html"
     # model = User
     form_class = UserRegistrationForm
-    success_url = "social:login"
+    success_message = "Your profile was created successfully"
+    success_url = reverse_lazy("social:login")
 
     def form_valid(self, form):
         user = form.save(commit=False)
-        user.set_password(form.cleaned_data['password2'])
+        user.set_password(form.cleaned_data['password'])
         user.save()
-        messages.success(self.request, "registration successful")
+        messages.success(self.request, "Registration Successful")
+
         return super().form_valid(form)
