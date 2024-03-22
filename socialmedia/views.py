@@ -6,9 +6,12 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth.views import LoginView as _LoginView
 from django.forms import Form
-from .forms import LoginForm, UserRegistrationForm
-from django.views.generic.edit import FormView, CreateView
+from .forms import LoginForm, UserRegistrationForm, EditUserForm
+from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import User
 
 
 def log_out(request):
@@ -47,3 +50,22 @@ class RegistrationView(CreateView, SuccessMessageMixin):
         messages.success(self.request, "Registration Successful")
 
         return super().form_valid(form)
+
+    # class EditUserView(UpdateView, SuccessMessageMixin,LoginRequiredMixin):
+    #     model = User
+    #     fields = ['username', 'first_name', 'last_name', 'email', 'phone_number', 'date_of_birth', 'bio', 'photo',
+    #               'job']
+    #
+
+
+@login_required
+def edit_user(request):
+    if request.method == "POST":
+        user_form = EditUserForm(request.POST, instance=request.user, files=request.FILES)
+        if user_form.is_valid():
+            user_form.save()
+            messages.success(request, "Your profile has been updated")
+            return redirect("social:index")
+    else:
+        user_form = EditUserForm(instance=request.user)
+    return render(request, 'registration/edit_account.html', {"form": user_form})

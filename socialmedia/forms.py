@@ -11,12 +11,12 @@ class LoginForm(AuthenticationForm):
 
 
 class UserRegistrationForm(forms.ModelForm):
-    password = forms.CharField(max_length=20, widget=forms.PasswordInput(attrs={'class': 'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+    password = forms.CharField(max_length=20, widget=forms.PasswordInput(attrs={
+        'class': 'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
                                label='password')
-    password2 = forms.CharField(max_length=20, widget=forms.PasswordInput(attrs={'class': 'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+    password2 = forms.CharField(max_length=20, widget=forms.PasswordInput(attrs={
+        'class': 'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
                                 label='password confirmation')
-
-
 
     class Meta:
         model = User
@@ -48,3 +48,52 @@ class UserRegistrationForm(forms.ModelForm):
         if User.objects.filter(phone_number=phone).exists():
             raise forms.ValidationError('this phone number already exists')
         return phone
+
+
+class EditUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'phone_number', 'date_of_birth', 'bio', 'photo',
+                  'job']
+
+        widgets = {
+            'username': forms.TextInput(attrs={
+                'class': "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+            }),
+            'first_name': forms.TextInput(attrs={
+                'class': "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+            }),
+            'phone': forms.TextInput(attrs={
+                'class': "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+            }),
+            'date_of_birth': forms.DateInput(attrs={
+                'class': "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+            }),
+            'bio': forms.TextInput(attrs={
+                'class': "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+            }),
+            'photo': forms.FileInput(attrs={
+                'class': "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+            }),
+            'job': forms.TextInput(attrs={
+                'class': "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+            }),
+        }
+
+    def clean_phone_number(self):
+        phone = self.cleaned_data['phone_number']
+        if User.objects.exclude(id=self.instance.id).filter(phone_number=phone).exists():
+            raise forms.ValidationError('this phone number already exists')
+        return phone
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if User.objects.exclude(id=self.instance.id).filter(username=username).exists():
+            raise forms.ValidationError('this username already exists')
+        return username
