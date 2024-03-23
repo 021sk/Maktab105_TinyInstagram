@@ -5,9 +5,9 @@ from django.contrib.auth.forms import AuthenticationForm
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(max_length=250, required=True, label="username or phone",
-                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+                               widget=forms.TextInput(attrs={'class': 'forms-control'}))
     password = forms.CharField(max_length=250, required=True,
-                               widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+                               widget=forms.PasswordInput(attrs={'class': 'forms-control'}))
 
 
 class UserRegistrationForm(forms.ModelForm):
@@ -97,3 +97,27 @@ class EditUserForm(forms.ModelForm):
         if User.objects.exclude(id=self.instance.id).filter(username=username).exists():
             raise forms.ValidationError('this username already exists')
         return username
+
+
+class TicketForm(forms.Form):
+    SUBJECT_CHOICES = (
+        ('پیشنهاد', 'پیشنهاد'),
+        ('انتقاد', 'انتقاد'),
+        ('گزارش', 'گزارش'),
+    )
+    message = forms.CharField(widget=forms.Textarea(attrs={'class': 'forms-control', 'rows': "3"}), required=True,
+                              label='پیام')
+    name = forms.CharField(max_length=250, widget=forms.TextInput(attrs={'class': 'forms-control'}), required=True,
+                           label='نام')
+    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'forms-control'}), label='ایمیل')
+    phone = forms.CharField(max_length=11, widget=forms.TextInput(attrs={'class': 'forms-control'}), required=True,
+                            label='شماره تماس')
+    subject = forms.ChoiceField(choices=SUBJECT_CHOICES, label='موضوع')
+
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        if phone:
+            if not phone.isnumeric():
+                raise forms.ValidationError("شماره تلفن عددی نیست!")
+            else:
+                return phone

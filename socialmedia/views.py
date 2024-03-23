@@ -6,12 +6,13 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth.views import LoginView as _LoginView
 from django.forms import Form
-from .forms import LoginForm, UserRegistrationForm, EditUserForm
+from .forms import LoginForm, UserRegistrationForm, EditUserForm, TicketForm
 from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import User
+from django.core.mail import send_mail
 
 
 def log_out(request):
@@ -68,4 +69,21 @@ def edit_user(request):
             return redirect("social:index")
     else:
         user_form = EditUserForm(instance=request.user)
-    return render(request, 'registration/edit_account.html', {"form": user_form})
+    return render(request, 'registration/edit_account.html', {"forms": user_form})
+
+
+def ticket(request):
+    sent = False
+    if request.method == "POST":
+
+        form = TicketForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            message = f"{cd['name']}\n{cd['email']}\n{cd['phone']}\n\n{cd['message']}"
+            send_mail(subject=cd['subject'], message=message, from_email='shahaabkabiri73@gmail.com',
+                      recipient_list=['amkabiri64@gmail.com'], fail_silently=True)
+            sent = True
+
+    else:
+        form = TicketForm()
+    return render(request, "forms/ticket.html", {'forms': form, 'sent': sent})

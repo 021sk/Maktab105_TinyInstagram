@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% if True%}
+        <h1>email has send</h1>
+    {% endif %}
+    <section class="py-4">
+	<div class="container">
+    <div class="row pb-4">
+			<div class="col-12">
+        <!-- Title -->
+        <h1 class="mb-0 h3">ارسال تیکت به پشتیبانی</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<!-- Chart START -->
+				<div class="card border h-100">
+					<!-- Card body -->
+					<div class="card-body">
+            <!-- Form START -->
+
+    <form method="post">
+    {% csrf_token %}
+        نام و نام خانوادگی:
+    <input type="text" name="name" required class="form-control" placeholder=""
+            {% if form.name.value %} value="{{ form.name.value }}" {% endif %}>
+
+        <br>
+        ایمیل:
+    <input type="email" name="email" class="form-control" placeholder
+            {% if form.email.value %} value="{{ form.email.value }}" {% endif %} >
+
+        <br>
+        شماره تماس:
+    <input type="text" name="phone" required maxlength="11" class="form-control"
+    {% if form.phone.value %} value="{{ form.phone.value }}" {% endif %}>
+        <br>
+        متن:
+    <textarea class="form-control" rows="3" name="message">{% if form.message.value %}{{ form.message.value }}{% endif %}</textarea>
+        <br>
+
+    <select name="subject" class="form-select">
+        <option value="پیشنهاد"
+                {% if form.subject.value == 'پیشنهاد' %} selected {% endif %}>
+            پیشنهادات</option>
+        <option value="انتقاد"
+        {% if form.subject.value == 'انتقاد' %} selected {% endif %}>
+            انتقادات</option>
+        <option value="گزارش"
+                {% if form.subject.value == 'گزارش' %} selected {% endif %}>
+            گزارش</option>
+    </select>
+        <br>
+    <button class="btn btn-primary" type="submit">ارسال تیکت</button>
+    </form>
+                    <!-- Form END -->
+        </div>
+    </div><!-- Chart END -->
+</div>
+    </div>
+	</div>
+</section>
+
+
+
+</body>
+</html>
