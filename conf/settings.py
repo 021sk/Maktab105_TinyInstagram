@@ -36,8 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # local_app
-    'socialmedia'
+    'socialmedia',
     # third party app
+    'taggit'
 ]
 
 MIDDLEWARE = [

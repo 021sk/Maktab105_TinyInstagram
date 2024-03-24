@@ -11,7 +11,8 @@ from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteVi
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import User
+from .models import User, Post
+from taggit.models import Tag
 from django.core.mail import send_mail
 
 
@@ -87,3 +88,12 @@ def ticket(request):
     else:
         form = TicketForm()
     return render(request, "forms/ticket.html", {'forms': form, 'sent': sent})
+
+
+def post_list(request, tag_slug=None):
+    posts = Post.objects.all()
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        posts = posts.filter(tags__in=[tag])
+    return render(request, 'social/list.html', {"posts": posts, "tag": tag})

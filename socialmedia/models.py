@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from taggit.managers import TaggableManager
 
 
 class User(AbstractUser):
@@ -19,6 +20,13 @@ class Post(models.Model):
     likes = models.ManyToManyField('User', related_name='liked_posts', blank=True)
     total_likes = models.PositiveIntegerField(default=0)
     active = models.BooleanField(default=True)
+    tags = TaggableManager()
+
+    class Meta:
+        ordering = ['-created']
+
+    def __str__(self):
+        return self.author.first_name + ": " + self.description[:10] + '...'
 
 
 class Image(models.Model):

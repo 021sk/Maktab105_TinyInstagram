@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User
+from .models import *
 
 
 @admin.register(User)
@@ -10,3 +10,10 @@ class UserAdmin(UserAdmin):
         ('Additional Info', {'fields': ('date_of_birth', 'bio', 'photo', 'job', 'phone_number')}),
 
     )
+
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ['author', 'created', 'description']
+    ordering = ['created']
+    search_fields = ['description']
