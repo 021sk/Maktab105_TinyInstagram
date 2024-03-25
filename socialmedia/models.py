@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from taggit.managers import TaggableManager
+from django.urls import reverse, reverse_lazy
 
 
 class User(AbstractUser):
@@ -28,12 +29,19 @@ class Post(models.Model):
     def __str__(self):
         return self.author.first_name + ": " + self.description[:10] + '...'
 
+    def get_absolute_url(self):
+        return reverse_lazy('social:post_detail', args=[self.id])
+
 
 class Image(models.Model):
-    image_file = models.ImageField(upload_to='')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="images", verbose_name='post', null=True)
+    image_file = models.ImageField(upload_to="post_images/")
     title = models.CharField(max_length=250, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created']
 
 
 class Comment(models.Model):
@@ -43,3 +51,6 @@ class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['created']

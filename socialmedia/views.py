@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, render, get_object_or_404
@@ -6,8 +5,8 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth.views import LoginView as _LoginView
 from django.forms import Form
-from .forms import LoginForm, UserRegistrationForm, EditUserForm, TicketForm
-from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
+from .forms import LoginForm, UserRegistrationForm, EditUserForm, TicketForm, CreatePostForm
+from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView, View
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -97,3 +96,28 @@ def post_list(request, tag_slug=None):
         tag = get_object_or_404(Tag, slug=tag_slug)
         posts = posts.filter(tags__in=[tag])
     return render(request, 'social/list.html', {"posts": posts, "tag": tag})
+
+
+class PostCreateView(LoginRequiredMixin, View):
+    form_class = CreatePostForm
+
+    def get(self, request):
+        form = self.form_class()
+        return render(request, 'forms/create_post.html', {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            form.save_m2m()
+            return redirect('social:index')
+
+
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    context = {
+        'post': post,
+    }
+    return render(request, "social/post_detail.html", context)
