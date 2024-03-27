@@ -2,15 +2,17 @@ from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.views import LoginView as _LoginView
 from django.forms import Form
-from .forms import LoginForm, UserRegistrationForm, EditUserForm, TicketForm, CreatePostForm
+from django.views.decorators.http import require_POST
+
+from .forms import LoginForm, UserRegistrationForm, EditUserForm, TicketForm, CreatePostForm, CommentForm
 from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView, View
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import User, Post
+from .models import User, Post, Image
 from taggit.models import Tag
 from django.core.mail import send_mail
 
@@ -95,29 +97,83 @@ def post_list(request, tag_slug=None):
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
         posts = posts.filter(tags__in=[tag])
-    return render(request, 'social/list.html', {"posts": posts, "tag": tag})
+    return render(request, 'social/list.html', {"posts": posts, "tag": tag, "form": CommentForm()})
 
 
-class PostCreateView(LoginRequiredMixin, View):
-    form_class = CreatePostForm
-
-    def get(self, request):
-        form = self.form_class()
-        return render(request, 'forms/create_post.html', {'form': form})
-
-    def post(self, request):
-        form = self.form_class(request.POST)
+# class PostCreateView(LoginRequiredMixin, View):
+#     form_class = CreatePostForm
+#
+#     def get(self, request):
+#         form = self.form_class()
+#         return render(request, 'forms/create_post.html', {'form': form})
+#
+#     def post(self, request):
+#         form = self.form_class(request.POST, request.FILES)
+#         if form.is_valid():
+#             post = form.save(commit=False)
+#             post.author = request.user
+#             post.save()
+#             form.save_m2m()
+#             Image.objects.create(image_file=form.cleaned_data['image1'], post=post)
+#             Image.objects.create(image_file=form.cleaned_data['image2'], post=post)
+#
+#             return redirect('social:index')
+#         return render(request, 'forms/create_post.html', {'form': form}
+#                       )
+@login_required
+def create_post(request):
+    if request.method == "POST":
+        form = CreatePostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             post.save()
             form.save_m2m()
-            return redirect('social:index')
+            Image.objects.create(image_file=form.cleaned_data['image1'], post=post)
+            Image.objects.create(image_file=form.cleaned_data['image2'], post=post)
+            return redirect('social:profile')
+    else:
+        form = CreatePostForm()
+    return render(request, 'forms/create_post.html', {'form': form})
 
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
+    comments = post.comments.filter(active=True)
     context = {
         'post': post,
+        'comments': comments
     }
     return render(request, "social/post_detail.html", context)
+
+
+@require_POST
+def post_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    form = CommentForm(data=request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.post = post
+        comment.name = request.user.username
+        comment.save()
+    return redirect('social:posts_list')
+
+
+@login_required()
+@require_POST
+def like_post(request):
+    post_id = request.POST.get('post_id')
+    if post_id is not None:
+        post = get_object_or_404(Post, id=post_id)
+        user = request.user
+        if user in post.likes.all():
+            post.likes.remove(user)
+            liked = False
+        else:
+            post.likes.add(user)
+            liked = True
+        post_likes_count = post.likes.count()
+        response_data = {'likes_count': post_likes_count, 'liked': liked}
+    else:
+        response_data = {'error': 'post_id is required'}
+    return JsonResponse(response_data)

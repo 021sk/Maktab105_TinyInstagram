@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Post
+from .models import User, Post, Comment
 from django.contrib.auth.forms import AuthenticationForm
 
 
@@ -124,6 +124,8 @@ class TicketForm(forms.Form):
 
 
 class CreatePostForm(forms.ModelForm):
+    image1 = forms.ImageField(label="image", widget=forms.FileInput(attrs={'class': 'form-control'}))
+    image2 = forms.ImageField(label="image", widget=forms.FileInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Post
@@ -131,7 +133,22 @@ class CreatePostForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={
                 'class': '',
-                'rows': "10"
+                'rows': "3"
             }),
         }
 
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['body']
+        widgets = {
+            'body': forms.TextInput(attrs={
+
+                'class': 'w-full py-0.5 bg-transparent border-none rounded text-sm pl-0 text-coolGray-100',
+                'placeholder': 'add comment here'
+            }),
+        }
+        labels = {
+            'body': ''
+        }

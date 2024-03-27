@@ -1,7 +1,171 @@
-{{ post.description|linebreaks }}
-published at {{ post.created }} by {{ post.author }}
-<br>
-{% for tag in post.tags.all %}
-        <a href="{% url 'social:post_list_by_tag' tag.slug %}">{{ tag.name }}</a>
-        {% if not forloop.last %}, {% endif %}
-{% endfor %}
+{#{{ post.description|linebreaks }}#}
+{#published at {{ post.created }} by {{ post.author }}#}
+{#<br>#}
+{#{% for tag in post.tags.all %}#}
+{#        <a href="{% url 'social:post_list_by_tag' tag.slug %}">{{ tag.name }}</a>#}
+{#        {% if not forloop.last %}, {% endif %}#}
+{#{% endfor %}#}
+{% extends 'base.html' %}
+{% block content %}
+    <!-- component -->
+    <div class="post bg-gray-100 h-screen flex items-center justify-center" data-post-id="{{ post.id }}">
+        <div class="bg-white p-8 rounded-lg shadow-md max-w-md">
+            <!-- User Info with Three-Dot Menu -->
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-2">
+                    <img src="https://placekitten.com/40/40" alt="User Avatar" class="w-8 h-8 rounded-full">
+                    <div>
+                        <p class="text-gray-800 font-semibold">{{ post.author }}</p>
+                        <p class="text-gray-500 text-sm">{{ post.created }}</p>
+                    </div>
+                </div>
+                <div class="text-gray-500 cursor-pointer">
+                    <!-- Three-dot menu icon -->
+                    {#				<button class="hover:bg-gray-50 rounded-full p-1">#}
+                    {#					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">#}
+                    {#						<circle cx="12" cy="7" r="1" />#}
+                    {#						<circle cx="12" cy="12" r="1" />#}
+                    {#						<circle cx="12" cy="17" r="1" />#}
+                    {#					</svg>#}
+                    {#				</button>#}
+                </div>
+            </div>
+            <!-- Message -->
+            <div class="mb-4">
+                <p class="text-gray-800">{{ post.description|linebreaks }}
+                    {% for tag in post.tags.all %}
+                        <a href="{% url 'social:post_list_by_tag' tag.slug %}" class="bg-cyan-700">{{ tag.name }}</a>
+                    {% endfor %}
+                </p>
+            </div>
+            <!-- Image -->
+            <div class="mb-4">
+                <img src='{{ post.images.first.image_file.url }}' alt="Post Image"
+                     class="w-full h-48 object-cover rounded-md">
+            </div>
+            <!-- Like and Comment Section -->
+            <div class="flex items-center justify-between text-gray-500">
+                <div class="flex items-center space-x-2">
+                    <button class=" flex justify-center items-center gap-2 px-2 hover:bg-gray-50 rounded-full p-1">
+                        {% if request.user in post.likes.all %}
+
+                            <i class="fa fa-heart heart text-red-700" id="like-button"></i>
+                            
+
+                        {% else %}
+
+                            <i class="fa fa-heart-o heart " id="like-button" ></i>
+                            
+                        {% endif %}
+                    <span id="likes-count">{{ post.likes.count }} Likes</span>
+                    </button>
+                </div>
+                <button class="flex justify-center items-center gap-2 px-2 hover:bg-gray-50 rounded-full p-1">
+                    <svg width="22px" height="22px" viewBox="0 0 24 24" class="w-5 h-5 fill-current"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22ZM8 13.25C7.58579 13.25 7.25 13.5858 7.25 14C7.25 14.4142 7.58579 14.75 8 14.75H13.5C13.9142 14.75 14.25 14.4142 14.25 14C14.25 13.5858 13.9142 13.25 13.5 13.25H8ZM7.25 10.5C7.25 10.0858 7.58579 9.75 8 9.75H16C16.4142 9.75 16.75 10.0858 16.75 10.5C16.75 10.9142 16.4142 11.25 16 11.25H8C7.58579 11.25 7.25 10.9142 7.25 10.5Z"></path>
+                        </g>
+                    </svg>
+                    <span>
+                    {% with comments.count as comment_count %}
+                        {{ comment_count }} Comment{{ comment_count|pluralize }}
+                    {% endwith %}
+                </span>
+                </button>
+            </div>
+            <hr class="mt-2 mb-2">
+            <p class="text-gray-800 font-semibold">Comment</p>
+            <hr class="mt-2 mb-2">
+            <div class="mt-4">
+                <!-- Comment 1 -->
+                {% for cm in comments %}
+                    <div class="flex items-center space-x-2">
+                        <img src="https://placekitten.com/32/32" alt="User Avatar" class="w-6 h-6 rounded-full">
+                        <div>
+                            <p class="text-gray-800 font-semibold">{{ cm.name }}</p>
+                            <p class="text-gray-500 text-sm">{{ cm.body }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+                <!-- Comment 2 -->
+                {#			<div class="flex items-center space-x-2 mt-2">#}
+                {#				<img src="https://placekitten.com/32/32" alt="User Avatar" class="w-6 h-6 rounded-full">#}
+                {#				<div>#}
+                {#					<p class="text-gray-800 font-semibold">Bob Johnson</p>#}
+                {#					<p class="text-gray-500 text-sm">I can't handle the cuteness! Where can I get one?</p>#}
+                {#				</div>#}
+                {#			</div>#}
+                {#			<!-- Reply from John Doe with indentation -->#}
+                {#			<div class="flex items-center space-x-2 mt-2 ml-6">#}
+                {#				<img src="https://placekitten.com/40/40" alt="User Avatar" class="w-6 h-6 rounded-full">#}
+                {#				<div>#}
+                {#					<p class="text-gray-800 font-semibold">John Doe</p>#}
+                {#					<p class="text-gray-500 text-sm">That little furball is from a local shelter. You should check it out! 🏠😺</p>#}
+                {#				</div>#}
+                {#			</div>#}
+                <!-- Add more comments and replies as needed -->
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        {#$(document).ready(function () {#}
+        {#    $('.like-button').click(function () {#}
+        {#        var post_id = $(this).closest('.post').data('post-id');#}
+        {#        var button =$(this);#}
+        {#        var csrfToken= '{{ csrf_token }}';#}
+        {#        $.ajax({#}
+        {#            type : 'Post',#}
+        {#            url : '/like_post/',#}
+        {#            data : {'post_id':post_id, 'csrfmiddlewaretoken':csrfToken},#}
+        {#            success : function (data){#}
+        {#                if (data.liked){#}
+        {#                    button.removeClass('fa fa-heart-o');#}
+        {#                    button.addClass('fa fa-heart bg-red-500')#}
+        {#                }#}
+        {#                else {#}
+        {#                     button.removeClass('fa fa-heart b');#}
+        {#                     button.addClass('fa fa-heart-o')#}
+        {#                    }#}
+        {#                $('.likes-count').text(data.likes_count);#}
+        {#                    #}
+        {#                },#}
+        {#            #}
+                    
+                    
+                    
+        {#        });#}
+        {#    });#}
+        
+     $(document).ready(function() {
+        $('#like-button').click(function() {
+            var  button = $(this);
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'social:like_post' %}',
+                data: {'post_id': {{post.id}}, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(data) {
+                    if (data.liked){
+                        
+                        button.removeClass('fa fa-heart-o');
+                        button.addClass('fa fa-heart text-red-700')
+                        
+                    } else {
+                        button.removeClass('fa fa-heart text-red-700')
+                        button.addClass('fa fa-heart-o');
+                        
+                        
+                    }
+                    $('#likes-count').text(data.likes_count);
+                },
+            });
+        });
+
+    });
+    </script>
+{% endblock %}

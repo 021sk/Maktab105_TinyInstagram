@@ -34,7 +34,7 @@ class Post(models.Model):
 
 
 class Image(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="images", verbose_name='post', null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="images", verbose_name='post')
     image_file = models.ImageField(upload_to="post_images/")
     title = models.CharField(max_length=250, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
@@ -54,3 +54,6 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['created']
+
+    def __str__(self):
+        return f"{self.name}: {self.post}"
