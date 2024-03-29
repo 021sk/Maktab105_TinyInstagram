@@ -20,12 +20,12 @@ from django.core.mail import send_mail
 def log_out(request):
     logout(request)
     messages.info(request, 'You have successfully logged out!')
-    return HttpResponse('you are logged out!')
+    return redirect(reverse_lazy("social:login"))
 
 
 class LoginView(_LoginView):
     redirect_authenticated_user = True
-    next_page = "social:index"
+    next_page = "social:profile"
     template_name = "registration/login.html"
     authentication_form = LoginForm
 
@@ -35,8 +35,21 @@ class LoginView(_LoginView):
         return result
 
 
-def index(request):
-    return HttpResponse("you are login")
+def profile(request):
+    try:
+        user = User.objects.prefetch_related('followers', 'following').get(id=request.user.id)
+    except:
+        return redirect('social:login')
+
+    my_posts = user.user_posts.all()[:8]
+
+    conntext = {
+        'my_posts': my_posts,
+        'user': user,
+        'form': CommentForm()
+    }
+    return render(request, 'social/profile.html', conntext)
+
 
 
 class RegistrationView(CreateView, SuccessMessageMixin):
@@ -68,7 +81,7 @@ def edit_user(request):
         if user_form.is_valid():
             user_form.save()
             messages.success(request, "Your profile has been updated")
-            return redirect("social:index")
+            return redirect("social:profile")
     else:
         user_form = EditUserForm(instance=request.user)
     return render(request, 'registration/edit_account.html', {"forms": user_form})

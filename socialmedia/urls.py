@@ -5,7 +5,7 @@ from .forms import LoginForm
 
 app_name = 'social'
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.profile, name='profile'),
     # path('login/', auth_views.LoginView.as_view(authentication_form=LoginForm), name='login', ),
     path('logout/', views.log_out, name='logout', ),
     path('login/', views.LoginView.as_view(), name='login'),

@@ -1,20 +1,7 @@
-{#{% if tag %}#}
-{#    <h2>post tagged with {{ tag.name }} </h2>#}
-{##}
-{#{% endif %}#}
-{##}
-{#{% for post in posts %}#}
-{#    #}
-{#    <a href="{{ post.get_absolute_url }}">{{ post.description|truncatewords:20|linebreaks }}</a>#}
-{#    published at {{ post.created }} by {{ post.author }}#}
-{#    <br>#}
-{#    {% for tag in post.tags.all %}#}
-{#        <a href="{% url 'social:post_list_by_tag' tag.slug %}">{{ tag.name }}</a>#}
-{#    {% endfor %}#}
-{#    <br>#}
 
-{#{% endfor %}#}
+
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
     {% if tag %}
     <h2>post tagged with {{ tag.name }} </h2>
@@ -51,9 +38,7 @@
         <div class="flex items-center justify-between" style="cursor: auto;">
           <div class="flex items-center space-x-3">
             <button type="button" title="Like post" class="flex items-center justify-center">
-{#              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-5 h-5 fill-current">#}
-{#                <path d="M453.122,79.012a128,128,0,0,0-181.087.068l-15.511,15.7L241.142,79.114l-.1-.1a128,128,0,0,0-181.02,0l-6.91,6.91a128,128,0,0,0,0,181.019L235.485,449.314l20.595,21.578.491-.492.533.533L276.4,450.574,460.032,266.94a128.147,128.147,0,0,0,0-181.019ZM437.4,244.313,256.571,425.146,75.738,244.313a96,96,0,0,1,0-135.764l6.911-6.91a96,96,0,0,1,135.713-.051l38.093,38.787,38.274-38.736a96,96,0,0,1,135.765,0l6.91,6.909A96.11,96.11,0,0,1,437.4,244.313Z"></path>#}
-{#              </svg>#}
+
                     {% if request.user in post.likes.all %}
 
                             <i class="like-button fa fa-heart heart text-red-700 " id="like-button{{ post.id }}"></i>
@@ -113,68 +98,12 @@
         </div>
       </div>
     </div>
-{#  </custom-card3>#}
+
 </div>
  
 
 
 {% endfor %}
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        {#$(document).ready(function () {#}
-        {#    $('.like-button').click(function () {#}
-        {#        var post_id = $(this).closest('.post').data('post-id');#}
-        {#        var button =$(this);#}
-        {#        var csrfToken= '{{ csrf_token }}';#}
-        {#        $.ajax({#}
-        {#            type : 'Post',#}
-        {#            url : '/like_post/',#}
-        {#            data : {'post_id':post_id, 'csrfmiddlewaretoken':csrfToken},#}
-        {#            success : function (data){#}
-        {#                if (data.liked){#}
-        {#                    button.removeClass('fa fa-heart-o');#}
-        {#                    button.addClass('fa fa-heart bg-red-500')#}
-        {#                }#}
-        {#                else {#}
-        {#                     button.removeClass('fa fa-heart b');#}
-        {#                     button.addClass('fa fa-heart-o')#}
-        {#                    }#}
-        {#                $('.likes-count').text(data.likes_count);#}
-        {#                    #}
-        {#                },#}
-        {#            #}
-                    
-                    
-                    
-        {#        });#}
-        {#    });#}
-        
-     $(document).ready(function() {
-        $('#like-button1').click(function() {
-            var  button = $(this);
-            var post_id = $(this).closest('.post').data('post-id');
 
-            $.ajax({
-                type: 'POST',
-                url: '{% url 'social:like_post' %}',
-                data: {'post_id': post_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-                success: function(data) {
-                    if (data.liked){
-                        
-                        button.removeClass('fa fa-heart-o');
-                        button.addClass('fa fa-heart text-red-700')
-                        
-                    } else {
-                        button.removeClass('fa fa-heart text-red-700')
-                        button.addClass('fa fa-heart-o');
-                        
-                        
-                    }
-                    $('#likes-count').text(data.likes_count);
-                },
-            });
-        });
-
-    });
-    </script>
 {% endblock %}
+

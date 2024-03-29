@@ -17,10 +17,10 @@
           </span>
        </div>
       {% endif %}
-      <h1 class="text-xl font-bold mb-4">User Registration</h1>
-      <form action="" method="POST">
+      <h1 class="text-xl font-bold mb-4">Edit Account</h1>
+      <form action="" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
-          {% for field in form %}
+          {% for field in forms %}
     <div class="fieldWrapper">
         {{ field.errors }}
         <label for="{{ field.auto_id }}" class="block text-sm font-medium text-gray-700">{{ field.label }}</label> {{ field }}
