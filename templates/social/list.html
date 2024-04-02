@@ -15,6 +15,7 @@
 
 {#{% endfor %}#}
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
     {% if tag %}
     <h2>post tagged with {{ tag.name }} </h2>
@@ -29,8 +30,14 @@
     <div class="rounded-md shadow-md sm:w-96 bg-coolGray-900 text-coolGray-100">
       <div class="flex items-center justify-between p-3" style="cursor: auto;">
         <div class="flex items-center space-x-2" style="cursor: auto;">
-          <img src="https://stackdiary.com/140x100.png" alt="" class="object-cover object-center w-8 h-8 rounded-full shadow-sm bg-coolGray-500 border-coolGray-700" style="cursor: auto;">
-          <div class="-space-y-1" style="cursor: auto;">
+            <a href="{{ post.author.get_absolute_url }}">
+           {% if post.author.photo %}     
+          <img src="{{ post.author.photo.url }}" alt="" class="object-cover object-center w-8 h-8 rounded-full shadow-sm bg-coolGray-500 border-coolGray-700" style="cursor: auto;">
+               {% else %}
+                <img src="{% static 'image/profile/avatar.png' %}" alt="" class="object-cover object-center w-8 h-8 rounded-full shadow-sm bg-coolGray-500 border-coolGray-700" style="cursor: auto;">
+            {% endif %}
+            </a>
+                <div class="-space-y-1" style="cursor: auto;">
             <h2 class="text-sm font-semibold leading-none" style="cursor: auto;">External_</h2>
             <span class="inline-block text-xs leading-none text-coolGray-400" style="cursor: auto;">New York City</span>
           </div>
@@ -121,33 +128,6 @@
 {% endfor %}
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        {#$(document).ready(function () {#}
-        {#    $('.like-button').click(function () {#}
-        {#        var post_id = $(this).closest('.post').data('post-id');#}
-        {#        var button =$(this);#}
-        {#        var csrfToken= '{{ csrf_token }}';#}
-        {#        $.ajax({#}
-        {#            type : 'Post',#}
-        {#            url : '/like_post/',#}
-        {#            data : {'post_id':post_id, 'csrfmiddlewaretoken':csrfToken},#}
-        {#            success : function (data){#}
-        {#                if (data.liked){#}
-        {#                    button.removeClass('fa fa-heart-o');#}
-        {#                    button.addClass('fa fa-heart bg-red-500')#}
-        {#                }#}
-        {#                else {#}
-        {#                     button.removeClass('fa fa-heart b');#}
-        {#                     button.addClass('fa fa-heart-o')#}
-        {#                    }#}
-        {#                $('.likes-count').text(data.likes_count);#}
-        {#                    #}
-        {#                },#}
-        {#            #}
-                    
-                    
-                    
-        {#        });#}
-        {#    });#}
         
      $(document).ready(function() {
         $('#like-button1').click(function() {

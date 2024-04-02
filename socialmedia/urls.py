@@ -19,9 +19,8 @@ urlpatterns = [
 
     path('password-reset/', auth_views.PasswordResetView.as_view(success_url='done'), name="password_reset"),
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),
-    path('password-reset/<uidb64>/<token>/',
-         auth_views.PasswordResetConfirmView.as_view(success_url='/login',
-                                                     ), name="password_reset_confirm"),
+    path('password-reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(success_url='/login'),
+         name="password_reset_confirm"),
     path('password-reset/complete/', auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
 
     path('posts/', views.post_list, name="posts_list", ),
@@ -29,6 +28,10 @@ urlpatterns = [
     path('posts/post/create_post/', views.create_post, name="create_post"),
     path('posts/detail/<pk>', views.post_detail, name="post_detail"),
     path('posts/<post_id>/comment', views.post_comment, name="post_comment"),
-    path('like_post/', views.like_post, name="like_post")
+    path('like_post/', views.like_post, name="like_post"),
+
+    path('users/', views.user_list, name='user_list'),
+    path('users/<username>/', views.user_detail, name='user_detail'),
+    path('follow/', views.user_follow, name='user_follow'),
 
 ]

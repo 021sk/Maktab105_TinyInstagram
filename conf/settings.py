@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     # local_app
     'socialmedia',
     # third party app
-    'taggit'
+    'taggit',
 ]
 
 MIDDLEWARE = [

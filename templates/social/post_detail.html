@@ -21,13 +21,13 @@
                 </div>
                 <div class="text-gray-500 cursor-pointer">
                     <!-- Three-dot menu icon -->
-                    {#				<button class="hover:bg-gray-50 rounded-full p-1">#}
-                    {#					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">#}
-                    {#						<circle cx="12" cy="7" r="1" />#}
-                    {#						<circle cx="12" cy="12" r="1" />#}
-                    {#						<circle cx="12" cy="17" r="1" />#}
-                    {#					</svg>#}
-                    {#				</button>#}
+                    				<button class="hover:bg-gray-50 rounded-full p-1">
+                    					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    						<circle cx="12" cy="7" r="1" />
+                    						<circle cx="12" cy="12" r="1" />
+                    						<circle cx="12" cy="17" r="1" />
+                    					</svg>
+                    				</button>
                 </div>
             </div>
             <!-- Message -->
@@ -91,55 +91,13 @@
                         </div>
                     </div>
                 {% endfor %}
-                <!-- Comment 2 -->
-                {#			<div class="flex items-center space-x-2 mt-2">#}
-                {#				<img src="https://placekitten.com/32/32" alt="User Avatar" class="w-6 h-6 rounded-full">#}
-                {#				<div>#}
-                {#					<p class="text-gray-800 font-semibold">Bob Johnson</p>#}
-                {#					<p class="text-gray-500 text-sm">I can't handle the cuteness! Where can I get one?</p>#}
-                {#				</div>#}
-                {#			</div>#}
-                {#			<!-- Reply from John Doe with indentation -->#}
-                {#			<div class="flex items-center space-x-2 mt-2 ml-6">#}
-                {#				<img src="https://placekitten.com/40/40" alt="User Avatar" class="w-6 h-6 rounded-full">#}
-                {#				<div>#}
-                {#					<p class="text-gray-800 font-semibold">John Doe</p>#}
-                {#					<p class="text-gray-500 text-sm">That little furball is from a local shelter. You should check it out! 🏠😺</p>#}
-                {#				</div>#}
-                {#			</div>#}
-                <!-- Add more comments and replies as needed -->
+            
             </div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        {#$(document).ready(function () {#}
-        {#    $('.like-button').click(function () {#}
-        {#        var post_id = $(this).closest('.post').data('post-id');#}
-        {#        var button =$(this);#}
-        {#        var csrfToken= '{{ csrf_token }}';#}
-        {#        $.ajax({#}
-        {#            type : 'Post',#}
-        {#            url : '/like_post/',#}
-        {#            data : {'post_id':post_id, 'csrfmiddlewaretoken':csrfToken},#}
-        {#            success : function (data){#}
-        {#                if (data.liked){#}
-        {#                    button.removeClass('fa fa-heart-o');#}
-        {#                    button.addClass('fa fa-heart bg-red-500')#}
-        {#                }#}
-        {#                else {#}
-        {#                     button.removeClass('fa fa-heart b');#}
-        {#                     button.addClass('fa fa-heart-o')#}
-        {#                    }#}
-        {#                $('.likes-count').text(data.likes_count);#}
-        {#                    #}
-        {#                },#}
-        {#            #}
-                    
-                    
-                    
-        {#        });#}
-        {#    });#}
+
         
      $(document).ready(function() {
         $('#like-button').click(function() {

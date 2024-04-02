@@ -12,7 +12,7 @@ from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteVi
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import User, Post, Image
+from .models import User, Post, Image, Contact
 from taggit.models import Tag
 from django.core.mail import send_mail
 
@@ -42,14 +42,17 @@ def profile(request):
         return redirect('social:login')
 
     my_posts = user.user_posts.all()[:8]
+    # following = user.get_followings()
+    # followers = user.get_followers()
 
     conntext = {
         'my_posts': my_posts,
         'user': user,
-        'form': CommentForm()
+        'form': CommentForm(),
+        # 'following': following,
+        # 'followers': followers,
     }
     return render(request, 'social/profile.html', conntext)
-
 
 
 class RegistrationView(CreateView, SuccessMessageMixin):
@@ -105,7 +108,7 @@ def ticket(request):
 
 
 def post_list(request, tag_slug=None):
-    posts = Post.objects.all()
+    posts = Post.objects.select_related('author').all()
     tag = None
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
@@ -190,3 +193,37 @@ def like_post(request):
     else:
         response_data = {'error': 'post_id is required'}
     return JsonResponse(response_data)
+
+
+@login_required
+def user_list(request):
+    users = User.objects.filter(is_active=True)
+    return render(request, 'user/user_list.html', {'users': users})
+
+
+@login_required
+def user_detail(request, username):
+    user = get_object_or_404(User, username=username, is_active=True)
+    return render(request, 'user/user_detail.html', {'user': user})
+
+
+@login_required()
+@require_POST
+def user_follow(request):
+    user_id = request.POST.get('user_id')
+    if user_id:
+        try:
+            user = User.objects.get(id=user_id)
+            if request.user in user.followers.all():
+                Contact.objects.filter(user_from=request.user, user_to=user).delete()
+                follow = False
+            else:
+                Contact.objects.get_or_create(user_from=request.user, user_to=user)
+                follow = True
+            following_count = user.following.count()
+            followers_count = user.followers.count()
+            return JsonResponse(
+                {'follow': follow, 'followers_count': followers_count, 'following_count': following_count})
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'user does not exist'})
+    return JsonResponse({'error': 'invalid user id'})
