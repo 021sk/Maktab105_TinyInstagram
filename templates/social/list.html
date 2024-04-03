@@ -38,7 +38,7 @@
             {% endif %}
             </a>
                 <div class="-space-y-1" style="cursor: auto;">
-            <h2 class="text-sm font-semibold leading-none" style="cursor: auto;">External_</h2>
+            <h2 class="text-sm font-semibold leading-none" style="cursor: auto;">{{ post.author }}</h2>
             <span class="inline-block text-xs leading-none text-coolGray-400" style="cursor: auto;">New York City</span>
           </div>
         </div>
@@ -63,12 +63,12 @@
 {#              </svg>#}
                     {% if request.user in post.likes.all %}
 
-                            <i class="like-button fa fa-heart heart text-red-700 " id="like-button{{ post.id }}"></i>
+                            <i class="like-button fa fa-heart heart text-red-700 " id="like-button{{ post.id }}" style="font-size:20px"></i>
                             
 
                         {% else %}
 
-                            <i class="like-button fa fa-heart-o heart " id="like-button{{ post.id }}" ></i>
+                            <i class="like-button fa fa-heart-o heart " id="like-button{{ post.id }}" style="font-size:20px"></i>
                             
                         {% endif %}
             </button>

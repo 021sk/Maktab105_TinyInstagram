@@ -4,7 +4,6 @@ from taggit.managers import TaggableManager
 from django.urls import reverse, reverse_lazy
 
 
-
 class User(AbstractUser):
     date_of_birth = models.DateField(blank=True, null=True)
     bio = models.TextField(null=True, blank=True)

@@ -7,13 +7,20 @@
 {#{% endfor %}#}
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
     <!-- component -->
-    <div class="post bg-gray-100 h-screen flex items-center justify-center" data-post-id="{{ post.id }}">
-        <div class="bg-white p-8 rounded-lg shadow-md max-w-md">
+   
+    <div class="post bg-gray-200 h-screen flex items-center justify-center w-full " data-post-id="{{ post.id }}">
+        <div class="bg-white p-10 rounded-lg shadow-md w-1/4">
             <!-- User Info with Three-Dot Menu -->
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center space-x-2">
-                    <img src="https://placekitten.com/40/40" alt="User Avatar" class="w-8 h-8 rounded-full">
+{#                    <img src="https://placekitten.com/40/40" alt="User Avatar" class="w-8 h-8 rounded-full">#}
+                     {% if post.author.photo %}     
+          <img src="{{ post.author.photo.url }}" alt="" class="w-8 h-8 rounded-full" style="cursor: auto;">
+               {% else %}
+                <img src="{% static 'image/profile/avatar.png' %}" alt="" class="w-8 h-8 rounded-full" style="cursor: auto;">
+            {% endif %}
                     <div>
                         <p class="text-gray-800 font-semibold">{{ post.author }}</p>
                         <p class="text-gray-500 text-sm">{{ post.created }}</p>
@@ -21,13 +28,13 @@
                 </div>
                 <div class="text-gray-500 cursor-pointer">
                     <!-- Three-dot menu icon -->
-                    				<button class="hover:bg-gray-50 rounded-full p-1">
-                    					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    						<circle cx="12" cy="7" r="1" />
-                    						<circle cx="12" cy="12" r="1" />
-                    						<circle cx="12" cy="17" r="1" />
-                    					</svg>
-                    				</button>
+{#                    				<button class="hover:bg-gray-50 rounded-full p-1">#}
+{#                    					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">#}
+{#                    						<circle cx="12" cy="7" r="1" />#}
+{#                    						<circle cx="12" cy="12" r="1" />#}
+{#                    						<circle cx="12" cy="17" r="1" />#}
+{#                    					</svg>#}
+{#                    				</button>#}
                 </div>
             </div>
             <!-- Message -->
@@ -95,6 +102,7 @@
             </div>
         </div>
     </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
 

@@ -58,9 +58,9 @@
             </div>
             <div
                     class="py-4 flex justify-center items-center w-full divide-x divide-gray-400 divide-solid">
-                <span class="text-center px-2"><span class="font-bold text-gray-700">56</span><span
+                <span class="text-center px-2"><span class="font-bold text-gray-700">{{ user.followers.count }}</span><span
                         class="text-gray-600"> followers</span></span><span class="text-center px-2"><span
-                    class="font-bold text-gray-700">112</span><span class="text-gray-600"> following</span></span><span
+                    class="font-bold text-gray-700">{{ user.following.count }}</span><span class="text-gray-600"> following</span></span><span
                     class="text-center px-2"><span class="font-bold text-gray-700">{{ my_posts.count }}</span><span class="text-gray-600"> post</span></span>
             </div>
         </div>
@@ -81,13 +81,13 @@
                             <div class="flex justify-center items-center 
                                                     space-x-4 h-full">
                                   <span class="p-2">
-                                    <i class="fas fa-heart"></i>
-                                    841K
+                                    <i class="fa fa-heart-o" style="font-size:20px"></i>
+                                    {{ post.likes.count }}
                                   </span>
 
                                 <span class="p-2">
-                                    <i class="fas fa-comment"></i>
-                                    909
+                                   <i class="fa fa-comment-o" style="font-size:20px"></i>
+                                    {{ post.comments.count }}
                                   </span>
                             </div>
                         </div>
